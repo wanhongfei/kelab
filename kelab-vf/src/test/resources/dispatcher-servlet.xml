@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context.xsd
+    http://www.springframework.org/schema/mvc
+	http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+    <!--指定配置文件-->
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:config.properties</value>
+            </list>
+        </property>
+    </bean>
+
+    <!--注解mvc相关的类-->
+    <mvc:annotation-driven/>
+
+    <!--开启注解扫描-->
+    <context:annotation-config/>
+    <context:component-scan base-package="org.kelab.util.*.**"/>
+
+    <!--输出bean创建加载信息-->
+    <bean class="org.kelab.vf.postprocessor.InstantiationTracingBeanPostProcessor"/>
+
+    <!--相关配置文件-->
+    <import resource="classpath:/spring-config/spring-redis.xml"/>
+
+    <!--手动bean注入工具包-->
+    <bean class="org.kelab.util.ContextUtil"/>
+
+    <!--数据源-->
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource"
+          init-method="init" destroy-method="close">
+        <property name="driverClassName" value="${jdbc.driver}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+        <property name="initialSize" value="${druid.initialSize}"/>
+        <property name="maxActive" value="${druid.maxActive}"/>
+        <property name="maxWait" value="${druid.maxWait}"/>
+        <property name="minIdle" value="${druid.minIdle}"/>
+        <property name="logAbandoned" value="${druid.logAbandoned}"/>
+        <property name="removeAbandonedTimeout" value="${druid.removeAbandonedTimeout}"/>
+        <property name="removeAbandoned" value="${druid.removeAbandoned}"/>
+        <property name="timeBetweenEvictionRunsMillis" value="${druid.timeBetweenEvictionRunsMillis}"/>
+        <property name="minEvictableIdleTimeMillis" value="${druid.minEvictableIdleTimeMillis}"/>
+        <property name="testWhileIdle" value="${druid.testWhileIdle}"/>
+        <property name="testOnBorrow" value="${druid.testOnBorrow}"/>
+        <property name="testOnReturn" value="${druid.testOnReturn}"/>
+        <property name="poolPreparedStatements" value="${druid.poolPreparedStatements}"/>
+        <property name="maxOpenPreparedStatements" value="${druid.maxOpenPreparedStatements}"/>
+        <property name="filters" value="${druid.filters}"/>
+    </bean>
+
+    <!--fdfs-->
+    <bean class="org.kelab.vf.fdfs.impl.FastDFSTemplateImpl" init-method="init">
+        <property name="defaultGroupName" value="group1"/>
+    </bean>
+
+    <!--统一监控zknode-->
+    <bean id="zooKeeperTemplate" class="org.kelab.vf.zk.impl.ZooKeeperTemplate"
+          init-method="init" destroy-method="close"/>
+
+</beans>

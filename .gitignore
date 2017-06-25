@@ -1,0 +1,13 @@
+﻿out/
+*/target/
+*/logs/
+.idea/
+.project/
+*.iml
+*.prefs
+tree.txt
+*.settings
+*.project
+bin/mybatis/src/**/*.xml
+bin/mybatis/src/**/*.java
+bin/thrift/gen-java
